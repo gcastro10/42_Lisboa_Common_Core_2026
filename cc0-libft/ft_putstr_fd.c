@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 16:21:04 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:28:40 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/24 16:21:04 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/29 18:31:30 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,11 @@ void	ft_putstr_fd(char *s, int fd)
 		i++;
 	}
 }
+
+/*
+int main(void)
+{
+	ft_putstr_fd("42 Lisboa", 1);
+	return (0);
+}
+*/

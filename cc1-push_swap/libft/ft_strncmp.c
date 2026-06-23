@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 18:49:51 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:22:31 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 16:04:12 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/15 15:22:24 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,21 @@
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	unsigned int	i;
+	size_t	i;
 
-	if (n == 0)
-	{
-		return (0);
-	}
 	i = 0;
-	while (s1[i] != '\0' && s1[i] == s2[i] && i < n - 1)
+	while (i < n)
 	{
+		if (s1[i] != s2[i] || s1[i] == 0 || s2[i] == 0)
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
 	}
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	return (0);
 }
+
+/*int	main(void)
+{
+	printf("%i\n", ft_strncmp("hello", "hello", 5));
+	printf("%i\n", ft_strncmp("hello", "hellooo", 10));
+	printf("%i\n", ft_strncmp("hellooo", "hello", 10));
+}*/

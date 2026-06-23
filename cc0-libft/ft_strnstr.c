@@ -3,37 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 19:31:28 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:02:54 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/23 19:31:28 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/29 18:51:15 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnstr(const char *s1, const char *s2, size_t n)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	if (s2[0] == '\0')
+	if (little[0] == '\0')
 	{
-		return ((char *)s1);
+		return ((char *)big);
 	}
-	while (s1[i] != '\0' && i < n)
+	while (big[i] != '\0' && i < len)
 	{
 		j = 0;
-		while (s1[i + j] != '\0' && s2[j] != '\0' && s1[i + j] == s2[j] && (i + j) < n)
+		while (little[j] != '\0' && big[i + j] == little[j] && (i + j) < len)
 		{
 			j++;
 		}
-		if (s2[j] == '\0')
+		if (little[j] == '\0')
 		{
-			return ((char *)&s1[i]);
+			return ((char *)&big[i]);
 		}
 		i++;
 	}
 	return (NULL);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char *haystack = "42 Lisboa Portugal";
+
+	printf("Test 1: %s \n", ft_strnstr(haystack, "Lisboa", 20));
+	printf("Test 2: %s \n", ft_strnstr(haystack, "Portugal", 20));
+	printf("Test 3: %p \n", ft_strnstr(haystack, "Lisboa", 5));
+	printf("Test 4: %s \n", ft_strnstr(haystack, "", 10));
+	printf("Test 5: %p \n", ft_strnstr(haystack, "42", 1));
+	return (0);
+}
+*/

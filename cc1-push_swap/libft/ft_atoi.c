@@ -3,40 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 19:47:49 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:54:52 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 17:16:35 by abrandao          #+#    #+#             */
+/*   Updated: 2026/06/12 17:00:50 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *nptr)
+int	ft_atoi(const char *str, int *result)
 {
-	int	i;
-	int	sign;
-	int	res;
+	long	num;
+	int		sign;
+	int		i;
 
-	i = 0;
+	num = 0;
 	sign = 1;
-	res = 0;
-	while (nptr[i] != '\0' && (nptr[i] == ' ' || nptr[i] == '\t'))
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		i++;
-	}
-	if (nptr[i] == '-' && nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-		{
+		if (str[i] == '-')
 			sign = -1;
-		}
 		i++;
 	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
+	if (!str[i])
+		return (0);
+	while (str[i])
 	{
-		res = (res * 10) + (nptr[i] - '0');
+		if (!ft_isdigit(str[i]))
+			return (0);
+		num = (num * 10) + (str[i] - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && (-num) < INT_MIN))
+			return (0);
 		i++;
 	}
-	return (res * sign);
+	return (*result = (int)(num * sign), 1);
 }
+
+/*int	main(void)
+{
+	printf("%i\n", ft_atoi("123"));
+	printf("%i\n", ft_atoi("    -123"));
+	printf("%i\n", ft_atoi(""));
+	printf("%i\n", ft_atoi("-2147483648999"));
+}*/

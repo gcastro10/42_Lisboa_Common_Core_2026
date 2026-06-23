@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 17:34:02 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:22:44 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/23 17:34:02 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/29 18:59:50 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,38 @@
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	unsigned char	*destination;
-	unsigned char	*source;
-	size_t			i;
+	unsigned char		*d;
+	const unsigned char	*s;
 
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
 	if (!dest && !src)
 	{
 		return (NULL);
 	}
-	destination = (unsigned char *)dest;
-	source = (unsigned char *)src;
-	if (destination < source)
+	if (d <= s)
 	{
-		i = 0;
-		while (i < n)
-		{
-			destination[i] = source[i];
-			i++;
-		}
+		return (ft_memcpy(d, s, n));
 	}
-	else if (destination > source)
+	while (n > 0)
 	{
-		i = n;
-		while (i > 0)
-		{
-			i--;
-			destination[i] = source[i];
-		}
+		n--;
+		d[n] = s[n];
 	}
 	return (dest);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char str1[] = "123456789";
+	char str2[] = "123456789";
+
+	ft_memmove(str1 + 2, str1, 5);
+	printf("Overlap Test (src < dest): %s (Expected: 121234589)\n", str1);
+	ft_memmove(str2, str2 + 2, 5);
+	printf("Overlap Test (src > dest): %s (Expected: 345676789)\n", str2);
+	return (0);
+}
+*/

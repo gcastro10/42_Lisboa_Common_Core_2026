@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 15:23:22 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:11:27 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/24 15:23:22 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 16:05:22 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,21 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 		i++;
 	}
 }
+
+/*
+#include <stdio.h>
+void	my_func(unsigned int i, char *c)
+{
+	if (i % 2 == 0)
+		*c = *c - 32;
+}
+
+int main(void)
+{
+	char str[] = "hello world";
+
+	ft_striteri(str, my_func);
+	printf("%s\n", str); // Expected: HeLlO WoRlD
+	return (0);
+}
+*/

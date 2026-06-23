@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 15:52:33 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 15:58:03 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/24 15:52:33 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 16:10:13 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,23 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	ft_strlcpy(str, s + start, len + 1);
 	return (str);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char *res;
+
+	// take 5 chars starting from index 7
+	res = ft_substr("Hello, world!", 7, 5);
+	printf("Substr: %s\n", res);
+	free(res);
+
+	// start index is out of bounds
+	res = ft_substr("Hello", 10, 5);
+	printf("Out of bounds: '%s'\n", res);
+	free(res);
+
+	return (0);
+}
+*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 16:28:52 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:31:44 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/16 16:16:46 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/23 12:52:28 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,28 @@
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	long	nb;
+	char	c;
 
-	if (fd < 0)
+	if (n == -2147483648)
 	{
+		ft_putstr_fd("-2147483648", fd);
 		return ;
 	}
-	nb = n;
-	if (nb < 0)
+	if (n < 0)
 	{
 		ft_putchar_fd('-', fd);
-		nb = -nb;
+		n = -n;
 	}
-	if (nb > 9)
+	if (n > 9)
 	{
-		ft_putnbr_fd(nb / 10, fd);
+		ft_putnbr_fd(n / 10, fd);
 	}
-	ft_putchar_fd((nb % 10) + '0', fd);
+	c = (n % 10) + '0';
+	ft_putchar_fd(c, fd);
 }
+
+/* int	main(void)
+{
+	ft_putnbr_fd(-123, 1);
+	ft_putnbr_fd(0, 1);
+} */

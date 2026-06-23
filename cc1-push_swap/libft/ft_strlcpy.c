@@ -3,31 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 17:57:05 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/24 16:29:06 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 13:49:04 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/15 13:01:14 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t dsize)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	int		s_len;
 	size_t	i;
+	size_t	len;
 
-	s_len = ft_strlen(src);
-	if (dsize == 0)
-	{
-		return (s_len);
-	}
+	len = 0;
+	while (src[len] != 0)
+		len++;
+	if (size == 0)
+		return (len);
 	i = 0;
-	while (src[i] != '\0' && i < (dsize - 1))
+	while (src[i] != 0 && i < size - 1)
 	{
-		dest[i] = src[i];
+		dst[i] = src[i];
 		i++;
 	}
-	dest[i] = '\0';
-	return (s_len);
+	dst[i] = '\0';
+	return (len);
 }
+
+/*int	main(void)
+{
+	char *s = "Hello World!";
+	char d[20];
+
+	ft_strlcpy(d, s, 20);
+	printf("%s\n", d);
+}*/

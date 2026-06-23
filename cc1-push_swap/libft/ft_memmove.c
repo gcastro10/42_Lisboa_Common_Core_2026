@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 17:34:02 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:22:44 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 12:41:06 by abrandao          #+#    #+#             */
+/*   Updated: 2026/05/02 16:50:48 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,33 @@
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	unsigned char	*destination;
-	unsigned char	*source;
+	unsigned char	*d;
+	unsigned char	*s;
 	size_t			i;
 
-	if (!dest && !src)
-	{
-		return (NULL);
-	}
-	destination = (unsigned char *)dest;
-	source = (unsigned char *)src;
-	if (destination < source)
+	d = (unsigned char *)dest;
+	s = (unsigned char *)src;
+	if (d < s)
 	{
 		i = 0;
 		while (i < n)
 		{
-			destination[i] = source[i];
+			d[i] = s[i];
 			i++;
 		}
 	}
-	else if (destination > source)
+	else if (d > s)
 	{
-		i = n;
-		while (i > 0)
-		{
-			i--;
-			destination[i] = source[i];
-		}
+		while (n--)
+			d[n] = s[n];
 	}
 	return (dest);
 }
+
+/*int	main(void)
+{
+	char *src = "Hellow World!";
+	char dest[20];
+	ft_memmove(dest, src, 20);
+	printf("%s\n", dest);
+}*/

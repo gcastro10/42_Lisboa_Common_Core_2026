@@ -3,26 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 15:49:33 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:22:42 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/13 14:00:34 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/23 12:45:11 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memset(void *ptr, int c, size_t n)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	unsigned char	*pointer;
+	unsigned char	*ptr;
+	unsigned char	value;
 	size_t			i;
 
-	pointer = (unsigned char *)ptr;
+	ptr = (unsigned char *)s;
+	value = (unsigned char)c;
 	i = 0;
 	while (i < n)
 	{
-		pointer[i] = (unsigned char)c;
+		ptr[i] = value;
 		i++;
 	}
-	return (ptr);
+	return (s);
 }
+
+/* int	main(void)
+{
+	char	str[20] = "Hello world";
+
+	ft_memset(str, 'c', 20);
+	str[19] = '\0';
+	printf("%s\n", str);
+} */

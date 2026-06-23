@@ -3,21 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/27 13:52:09 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 15:58:18 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/27 13:52:09 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/29 19:28:03 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
 
-static int	count_words(const char *s, char c)
+static size_t	count_words(const char *s, char c)
 {
-	int	i;
-	int	count;
-	int	in_word;
+	size_t	i;
+	size_t	count;
+	int		in_word;
 
 	i = 0;
 	count = 0;
@@ -49,11 +48,11 @@ static char	**ft_free_all(char **lst, int i)
 	return (NULL);
 }
 
-char	**ft_fill(char **lst, char const *s, char c)
+static char	**ft_fill(char **lst, char const *s, char c)
 {
 	size_t	word_len;
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = 0;
@@ -66,7 +65,7 @@ char	**ft_fill(char **lst, char const *s, char c)
 			word_len = 0;
 			while (s[i + word_len] && s[i + word_len] != c)
 				word_len++;
-			lst[j] = ft_substr(s, i, word_len);
+			lst[j] = ft_substr(s, (unsigned int)i, word_len);
 			if (!lst[j])
 				return (ft_free_all(lst, j));
 			j++;

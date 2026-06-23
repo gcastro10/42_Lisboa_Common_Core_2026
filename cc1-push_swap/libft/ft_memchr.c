@@ -3,29 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 19:05:46 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 19:30:01 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 16:31:07 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/15 15:23:24 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *ptr, int c, size_t n)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	unsigned char	*pointer;
+	unsigned char	*p;
+	unsigned char	value;
 	size_t			i;
 
-	pointer = (unsigned char *)ptr;
+	p = (unsigned char *)s;
+	value = (unsigned char)c;
 	i = 0;
 	while (i < n)
 	{
-		if (pointer[i] == (unsigned char)c)
-		{
-			return ((void *)&pointer[i]);
-		}
+		if (p[i] == value)
+			return ((void *)(p + i));
 		i++;
 	}
 	return (NULL);
 }
+
+/*int	main(void)
+{
+	char s[20] = "HelLo World!";
+	char *p;
+	p = ft_memchr(s, 'o', 20);
+
+	printf("%s\n", p);
+}*/		

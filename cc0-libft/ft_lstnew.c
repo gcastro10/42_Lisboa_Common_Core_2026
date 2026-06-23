@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 16:56:29 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 18:12:47 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/24 16:56:29 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 15:58:52 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_list	*ft_lstnew(void *content)
 	return (new_node);
 }
 
-/* // Test Main 
+/*
 #include <stdio.h>
 int	main(void)
 {
@@ -40,4 +40,5 @@ int	main(void)
 		free(node);
 	}
 	return (0);
-} */
+}
+*/

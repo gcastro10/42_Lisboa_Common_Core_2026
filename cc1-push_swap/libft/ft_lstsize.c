@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 18:00:31 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/25 16:48:20 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/20 12:44:17 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/20 12:57:23 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,32 @@
 
 int	ft_lstsize(t_list *lst)
 {
-	int	count;
+	int	i;
 
-	count = 0;
-	while (lst)
+	i = 0;
+	while (lst != NULL)
 	{
-		count++;
 		lst = lst->next;
+		i++;
 	}
-	return (count);
+	return (i);
 }
 
-/* // --- Test Main ---
-#include <stdio.h>
-int	main(void)
+/*int	main(void)
 {
-	t_list *head = ft_lstnew("Node 1");
-	ft_lstadd_front(&head, ft_lstnew("Node 2"));
-	ft_lstadd_front(&head, ft_lstnew("Node 3"));
+	t_list	*list;
+	t_list	*first;
+	t_list	*second;
 
-	printf("List size: %d\n", ft_lstsize(head)); // Expected: 3
-	return (0);
-} */
+	list = NULL;
+	first = ft_lstnew("teste");
+	second = ft_lstnew("teste");
+
+	ft_lstadd_front(&list, first);
+	ft_lstadd_front(&list, second);
+
+	printf("length: %i\n", ft_lstsize(list));
+
+	free(first);
+	free(second);
+}*/

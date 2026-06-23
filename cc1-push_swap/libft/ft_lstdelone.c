@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft:lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 16:54:39 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/25 16:55:40 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/20 16:17:33 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/20 16:46:33 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void *))
+void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
 	if (!lst || !del)
-	{
 		return ;
-	}
 	del(lst->content);
 	free(lst);
 }
+
+/* int	main(void)
+{
+	t_list	*list;
+	
+	list = ft_lstnew(malloc(5));
+	ft_lstdelone(list, free);
+} */
+//valgrind

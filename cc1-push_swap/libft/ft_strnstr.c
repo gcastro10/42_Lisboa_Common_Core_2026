@@ -3,37 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 19:31:28 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:02:54 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/14 16:58:50 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/15 15:24:56 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnstr(const char *s1, const char *s2, size_t n)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
 	size_t	j;
 
+	if (little[0] == 0)
+		return ((char *)big);
 	i = 0;
-	if (s2[0] == '\0')
-	{
-		return ((char *)s1);
-	}
-	while (s1[i] != '\0' && i < n)
+	while (i < len && big[i] != 0)
 	{
 		j = 0;
-		while (s1[i + j] != '\0' && s2[j] != '\0' && s1[i + j] == s2[j] && (i + j) < n)
+		while (i + j < len && big[i + j] == little[j] && big[i + j] != 0)
 		{
 			j++;
-		}
-		if (s2[j] == '\0')
-		{
-			return ((char *)&s1[i]);
+			if (little[j] == 0)
+				return ((char *)big + i);
 		}
 		i++;
 	}
-	return (NULL);
+	return (0);
 }
+
+/*int	main(void)
+{
+	char big[] = "Hello World";
+	char little[] = "lo";
+
+	printf("%s\n", ft_strnstr(big, little, 12));
+}*/

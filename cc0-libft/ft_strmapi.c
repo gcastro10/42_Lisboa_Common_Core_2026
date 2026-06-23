@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/16 15:34:48 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:12:44 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/16 15:34:48 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 16:07:02 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,3 +35,25 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	res[i] = '\0';
 	return (res);
 }
+
+/* 
+#include <stdio.h>
+char	my_func(unsigned int i, char c)
+{
+	return (c + 1);
+}
+
+int main(void)
+{
+	char *res;
+
+	res = ft_strmapi("abc", my_func);
+	if (res)
+	{
+		printf("Original: abc\n");
+		printf("Mapped:   %s\n", res);
+		free(res);
+	}
+	return (0);
+}
+*/

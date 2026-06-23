@@ -1,194 +1,127 @@
-*This project has been created as part of the 42 curriculum by `<login1>`, `<login2>`.*
+*This project has been created as part of the 42 curriculum by abrandao, goperez-.*
 
-# push_swap
+Push Swap - 42 School Project
+A stack sorting program using limited operations, implemented in C.
 
-## Description
+## 📋 Description
+push_swap is a 42 School project that sorts a sequence of numbers using two stacks (A and B) with only a limited set of operations:
 
-`push_swap` is a C program that sorts a list of integers using only a small,
-fixed set of stack operations. It receives the integers as command-line
-arguments, builds **stack `a`**, and writes to **stdout** the exact sequence of
-operations that sorts `a` in ascending order (smallest value on top). A second
-stack `b` is used as scratch space.
+### Available Operations
+- sa: Swap the top of A
 
-The binary embeds **four sorting strategies** selectable at runtime and an
-**adaptive** default that chooses a strategy from a *disorder* metric computed
-on the input before any move is made. Both stacks are **doubly linked lists**,
-which gives O(1) reverse rotations via a `bottom` pointer.
+- sb: Swap the top of B
 
-No `libft` and no `printf` are used: every byte of output and every error is
-produced through tiny `write()`-based helpers. The project is **Norm v4**
-compliant and leak-free.
+- ss: Swap both tops
 
-## Instructions
+- pa: Move top of B to A
+
+- pb: Move top of A to B
+
+- ra: Rotate A (top goes to bottom)
+
+- rb: Rotate B
+
+- rr: Rotate both
+
+- rra: Reverse rotate A
+
+- rrb: Reverse rotate B
+
+- rrr: Reverse rotate both
+
+## 🚀 Instructions
 
 ### Compilation
+This project should be used with a bash terminal.
 
 ```bash
-make            # build ./push_swap
-make clean      # remove object files
-make fclean     # remove objects + binary
-make re         # rebuild from scratch
+make          # Compiles the project
+make clean    # Removes object files
+make fclean   # Removes everything including the executable
+make re       # Recompiles everything
 ```
 
-Compiled with `cc -Wall -Wextra -Werror`. No relink on a second `make`.
-
-### Execution
-
+### 💻 Usage
 ```bash
-./push_swap [FLAG] <int> <int> ...
+./push_swap [numbers]
+./push_swap [numbers] --simple          # Bubble Sort (O(n²))
+./push_swap [numbers] --medium          # Chunk Sort (O(n√n))
+./push_swap [numbers] --complex         # Radix Sort (O(n*k))
+./push_swap [numbers] --adaptive        # Adaptive (automatic)
+./push_swap [numbers] --bench           # Benchmark Mode with report
 ```
 
-- Integers are passed as separate arguments (e.g. `./push_swap 3 1 2`) and must
-  be unique, valid 32-bit signed integers.
-- With no integers, the program prints nothing and exits `0`.
-- On invalid input (non-integer, overflow, duplicate, unknown flag) it prints
-  `Error\n` to **stderr** and exits `1`.
-
-### Flags
-
-| Flag | Strategy | Complexity (operation model) |
-|---|---|---|
-| `--simple` | Selection sort | O(n²) |
-| `--medium` | Chunk sort | O(n√n) |
-| `--complex` | LSD radix sort on ranks | O(n log n) |
-| `--adaptive` | Auto (default) | regime-dependent |
-| `--bench` | Print metrics to **stderr** after sorting | — |
-
-Flags may be combined, e.g. `./push_swap --complex --bench 5 4 3 2 1`.
-
-Example:
-
+### Examples
 ```bash
-./push_swap --bench $(shuf -i 0-999999 -n 100 | tr '\n' ' ') 1>/dev/null
+# Simple sorting
+./push_swap 3 2 1
+
+# With numbers inside quotes
+./push_swap "9 8 7 6 5 4 3 2 1"
+
+# With benchmarking
+./push_swap --bench "5 3 1 4 2"
+
+# Specific algorithm
+./push_swap --simple "5 3 1 4 2"
 ```
 
-```text
-[bench] disorder: 49.40%
-[bench] strategy: medium (O(n sqrt n))
-[bench] total ops: 762
-[bench] sa:0 sb:0 ss:0 pa:100 pb:100 ra:360 rb:0 rr:0 rra:0 rrb:102 rrr:0
-```
+## 🎯 Explanation and justification of the algorithms selected
 
-(Operations alone go to stdout; `--bench` metrics go only to stderr.)
+A single sorting algorithm is rarely optimal for every data distribution. In `push_swap`, where the efficiency score depends strictly on the total number of operations, we designed a **Multi-Strategy Hybrid Strategy**. 
 
-## Algorithms & Justification
+By evaluating both the **dataset size ($N$)** and the **initial state of disorder**, the program dynamically routes the input to the most efficient algorithm, preventing the execution of redundant moves.
 
-### Data structure
+---
 
-Each stack is a doubly linked list with `top`, `bottom`, and `size`:
+#### 1. Small Sort Optimization ($\le 5$ elements)
+* **Algorithm Used:** Hardcoded state-machine for $N=3$; Cost-minimization push for $N=4$ and $N=5$.
+* **Justification:** For miniature datasets, the overhead of calculating complex data structures or sorting bit-by-bit is highly inefficient. 
+  * **$N \le 3$:** Sorted in a maximum of **2 operations** using a hardcoded decision tree that analyzes the relationship between the three nodes.
+  * **$N = 4$ and $N = 5$:** The algorithm locates the smallest absolute values, calculates the shortest path to the top (using either `ra` or `rra`), pushes them to Stack B, calls `sort_3` on Stack A, and pushes them back. This guarantees a safe pass under the strict 42 evaluation thresholds (under 12 operations for 5 numbers).
 
-```c
-typedef struct s_node { int value; struct s_node *prev; struct s_node *next; } t_node;
-typedef struct s_stack { t_node *top; t_node *bottom; int size; } t_stack;
-```
+---
 
-Push/pop happen at `top`; the `bottom` pointer makes `rra`/`rrb` O(1) (no full
-traversal needed). All eleven operations move existing nodes between stacks —
-no per-operation `malloc` — so the only allocations are the input nodes and the
-temporary array snapshots used for the disorder metric and rank compression.
+#### 2. Bubble Sort (`--simple`)
+* **Complexity:** $O(n^2)$
+* **Justification:** While Bubble Sort is generally inefficient for large random datasets, it features a crucial property: it is highly effective on **nearly sorted data**. If a stack of 100 elements only has 2 or 3 numbers out of place (a low disorder percentage), Bubble Sort can fix those localized anomalies using immediate `sa` or targeted single-rotation operations, achieving sorted state far quicker than heavy restructuring algorithms.
 
-### Disorder metric
+---
 
-Before any operation, `compute_disorder` takes an array snapshot of `a` and
-counts **inversions** — pairs `(i, j)`, `i < j`, with `a[i] > a[j]`:
+#### 3. Chunk Sort (`--medium`)
+* **Complexity:** $O(n\sqrt{n})$
+* **Justification:** When a dataset exhibits moderate disorder, a pure Radix sort might over-rotate the stack, while a Bubble sort would trigger too many comparisons. Chunk Sort bridges this gap by applying a **Divide and Conquer** philosophy:
+  1. The dataset is logically sliced into $B$ sub-blocks (chunks), where the optimal number of chunks is mathematically proportional to $\sqrt{n}$.
+  2. Numbers belonging to the lowest active chunk are filtered and pushed to Stack B.
+  3. By keeping elements of similar value grouped together in Stack B, the final push back to Stack A requires minimal rotation overhead, drastically reducing the operation count for medium-sized stacks (e.g., 100 elements).
 
-```
-disorder_permille = inversions * 1000 / (n * (n - 1) / 2)    -> 0..1000
-```
+---
 
-It is stored as an **integer permille** to avoid floating point (the subject's
-`[0,1]` value is just `permille/1000`). `n <= 1` yields `0`. The snapshot array
-is freed immediately. This is the worst-case-O(n²) inversion count, which is
-cheap for the benchmark sizes (≤ 500).
+#### 4. Radix Sort (`--complex`)
+* **Complexity:** $O(n \times k)$ where $k$ is the number of bits required to represent the largest index.
+* **Justification:** For large, highly chaotic datasets (e.g., 500 random elements), standard comparison-based algorithms risk hitting their worst-case scenarios. Radix Sort offers a deterministic solution.
+  * By first flattening the raw integers into consecutive **indices from $0$ to $N-1$**, we eliminate the issue of negative numbers and large gaps.
+  * The algorithm processes the dataset bit-by-bit, from the Least Significant Bit (LSB) to the Most Significant Bit (MSB). Elements with a `0` bit are pushed to Stack B, while elements with a `1` bit are rotated in Stack A. 
+  * Because its execution path is bound strictly to bit depth rather than element value comparisons, it provides a stable, predictable, and highly safe operation count that comfortably passes the 500-element evaluation benchmark.
 
-### Simple — selection sort, O(n²) (`--simple`)
+---
 
-Repeatedly find the minimum in `a`, rotate it to the top using the cheaper of
-`ra`/`rra`, and `pb` it. Once 3 elements remain, `sort_3` handles them with a
-hard-coded optimal sequence; `sort_2` handles 2. Finally `pa_all` pushes
-everything back from `b`. Best for nearly-sorted, small inputs.
+#### 5. The Adaptive Strategy
+Instead of forcing a static algorithm onto every payload, the default behavior of our `push_swap` analyzes the data's **Disorder Coefficient** before making a move.
 
-### Medium — chunk sort, O(n√n) (`--medium`)
+$$\text{Disorder } (\%) = \frac{\text{Number of Inversions}}{\text{Total Possible Inversions}}$$
 
-Values are **rank-compressed** (each value replaced by its 0-based rank), then
-pushed into `b` in ascending rank ranges (chunks). When a node's rank falls in
-the current chunk window it is pushed (`pb`, with an occasional `rb` to keep `b`
-roughly ordered); otherwise `ra` skips it. After every element is in `b`, they
-are pulled back by repeatedly rotating the current maximum of `b` to the top and
-`pa`-ing it, yielding ascending order in `a`. The chunk count scales with input
-size, giving the characteristic O(n√n) behaviour.
-
-### Complex — LSD radix sort on ranks, O(n log n) (`--complex`)
-
-Values are rank-compressed to `0..n-1`. For each bit from least to most
-significant (`max_bits = ceil(log2(n))` passes), one pass scans the current `a`:
-nodes whose current bit is `0` are pushed to `b` (`pb`), the rest are rotated
-(`ra`); then all of `b` is pushed back (`pa_all`). Because ranks are a dense
-`0..n-1` permutation, `ceil(log2 n)` passes fully sort the stack. Each pass is
-~1.5n operations, so the total is ~1.5·n·log₂(n) — the most scalable strategy.
-
-### Adaptive (default)
-
-`pick_strategy` routes by the disorder permille (forced flags bypass this):
-
-| Disorder | Permille | Strategy |
-|---|---|---|
-| `< 0.2` | `< 200` | simple (O(n²)) |
-| `0.2 ≤ x < 0.5` | `200–499` | medium (O(n√n)) |
-| `≥ 0.5` | `≥ 500` | complex (O(n log n)) |
-
-Nearly-sorted inputs get the cheap selection sort; heavily shuffled inputs
-(uniform random tends toward ~50% disorder) get radix.
-
-### Measured performance
-
-| Input | Budget (pass) | Typical adaptive result |
-|---|---|---|
-| 100 random | < 2000 ops | ~700–1100 ops |
-| 500 random | < 12000 ops | ~6300–6800 ops |
-
-Both comfortably reach the *good* tier.
-
-## File layout
-
-16 `.c` files + 1 header, each file ≤ 5 functions and each function ≤ 25 lines
-(Norm v4). The plan's three operation files and `parse`/`strategy` modules were
-split (`ops_push.c`, `ops_rrotate.c`, `parse2.c`, `strategy2.c`) strictly to
-stay under the 5-functions-per-file cap, as the plan's "When to Split a File"
-section allows.
-
-| File | Role |
-|---|---|
-| `main.c` | entry, context init, orchestration, cleanup, `is_sorted` |
-| `utils.c` | `write()`-based output (`put_char/str/nbr/uint/error`) |
-| `parse.c` / `parse2.c` | argument validation, flag parsing, stack build |
-| `stack.c` | doubly linked list core |
-| `ops_swap.c` / `ops_push.c` / `ops_rotate.c` / `ops_rrotate.c` | the 11 operations |
-| `ops_utils.c` | min/max position, rotate-to-top helpers |
-| `disorder.c` | inversion-count disorder metric |
-| `sort_simple.c` / `sort_medium.c` / `sort_complex.c` | the three sorters |
-| `strategy.c` / `strategy2.c` | dispatch, adaptive routing, `--bench` output |
-
-## Resources
-
-- 42 subject: *push_swap* v1.1 (mandatory part).
-- Radix-sort-for-push_swap technique (rank compression + bitwise passes), a
-  well-known community approach.
-- Inversion count as a sortedness measure (Kendall tau distance).
-
-### Use of AI
-
-An AI assistant (Cursor) was used to scaffold the repository against the project
-plan: generating the Norm-compliant file/function split, the boilerplate for the
-11 operations and the `write()` helpers, the test scripts, and this README. The
-sorting algorithms, the adaptive thresholds, and the doubly-linked-list design
-were specified in `PROJECT_PLAN.md` and implemented accordingly. All output was
-reviewed, compiled, norm-checked, valgrind-tested, and benchmarked.
+By establishing thresholds ($20\%$ and $50\%$), the program avoids the common pitfall of running a high-overhead Radix Sort on an array that only needed a few rotations to be solved, maximizing performance across all grading criteria.
 
 ## Contributions
+We goperez- and abrandao built this project together, developing functions step-by-step as the workflow demanded. Along the way, we focused on optimizing key algorithms and rigorously testing for performance, memory leaks, and robust error handling. When we weren't physically together, we would work online with discord share-screen. We didn't want to divide the code as we wanted to learn everything together.
 
-- `<login1>`: Makefile, `utils.c`, `main.c`, `stack.c`, operation files.
-- `<login2>`: `parse.c`, `disorder.c`, `strategy.c`, the three sorters.
-- Both: `sort_complex.c` + adaptive wiring, Norm audit, README, valgrind scripts.
+## Resources
+- Library Functions Manual
+- We used the provided checker for linux.
+- [Radix sort - Wikipedia](https://en.wikipedia.org/wiki/Radix_sort)
+- We also used several references from stack-overflow, reddit, and youtube for visualizing the algorithms.
 
-> No `libft`, no `printf`: all I/O is done with `write()` only.
+### AI Usage Disclosure
+- AI (Gemini 3 Flash) was used complementarily during this project.
+- Documentation: Assisting in formatting this README to maintain consistency with previous project documentation.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 17:51:48 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 18:25:48 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/20 12:04:56 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/20 12:49:18 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,30 @@
 void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (!lst || !new)
-	{
 		return ;
-	}
 	new->next = *lst;
 	*lst = new;
 }
 
-/* // --- Test Main ---
-#include <stdio.h>
-int	main(void)
+/*int	main(void)
 {
-	t_list	*head;
-	t_list	*node1;
-	t_list	*node2;
+	t_list	*list;
+	t_list	*first;
+	t_list	*second;
+	t_list	*temp;
 
-	head = NULL;
-	node1 = ft_lstnew("First Node");
-	node2 = ft_lstnew("New Front Node");
+	list = NULL;
+	first = ft_lstnew("World");
+	ft_lstadd_front(&list, first);
+	second = ft_lstnew("Hello");
+	ft_lstadd_front(&list, second);
 
-	// Add the first one
-	ft_lstadd_front(&head, node1);
-	// Add the second one to the front
-	ft_lstadd_front(&head, node2);
-
-	// Now head points to node2, and node2->next points to node1
-	t_list *temp = head;
-	while (temp)
+	temp = list;
+	while (temp != NULL)
 	{
-		printf("Content: %s\n", (char *)temp->content);
+		printf("list: %s\n", (char *)temp->content);
 		temp = temp->next;
 	}
-	return (0);
-} */
+
+	ft_lstclear(&list, free);
+}*/

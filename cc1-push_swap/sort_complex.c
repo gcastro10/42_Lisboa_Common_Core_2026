@@ -1,97 +1,67 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   sort_complex.c                                        :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   radix_sort.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:52:45 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/13 12:44:16 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-int	count_less(int *arr, int n, int v)
+static int	get_max_bits(int size)
 {
-	int	i;
-	int	c;
+	int	max_bits;
 
-	c = 0;
-	i = 0;
-	while (i < n)
+	max_bits = 0;
+	while ((size - 1) >> max_bits)
+		max_bits++;
+	return (max_bits);
+}
+
+static void	process_bit_pass(t_data *data, int bit, int size)
+{
+	int	j;
+
+	j = 0;
+	while (j < size)
 	{
-		if (arr[i] < v)
-			c++;
-		i++;
+		if (((data->a->top->index >> bit) & 1) == 0)
+			pb(data);
+		else
+			ra(data);
+		j++;
 	}
-	return (c);
 }
 
-void	rank_compress(t_stack *a)
-{
-	int		*arr;
-	t_node	*n;
-	int		sz;
-
-	sz = a->size;
-	arr = stack_to_array(a);
-	if (!arr)
-		return ;
-	n = a->top;
-	while (n)
-	{
-		n->value = count_less(arr, sz, n->value);
-		n = n->next;
-	}
-	free(arr);
-}
-
-int	max_bits(int n)
-{
-	int	bits;
-
-	bits = 0;
-	while ((1 << bits) < n)
-		bits++;
-	return (bits);
-}
-
-void	radix_pass(t_ctx *ctx, int bit)
+void	run_radix_sort(t_data *data)
 {
 	int	size;
+	int	max_bits;
 	int	i;
 
-	size = ctx->a.size;
-	i = 0;
-	while (i < size)
-	{
-		if (((ctx->a.top->value >> bit) & 1) == 0)
-			pb(ctx);
-		else
-			ra(ctx);
-		i++;
-	}
-	pa_all(ctx);
-}
-
-void	sort_complex(t_ctx *ctx)
-{
-	int	bits;
-	int	bit;
-
-	if (ctx->a.size < 2 || is_sorted(&ctx->a))
+	if (!data || !data->a)
 		return ;
-	if (ctx->a.size <= 3)
+	if (data->a->size <= 3)
 	{
-		sort_simple(ctx);
+		sort_3(data);
 		return ;
 	}
-	rank_compress(&ctx->a);
-	bits = max_bits(ctx->a.size);
-	bit = 0;
-	while (bit < bits)
+	if (data->a->size == 5)
 	{
-		radix_pass(ctx, bit);
-		bit++;
+		sort_5(data);
+		return ;
+	}
+	size = data->a->size;
+	max_bits = get_max_bits(size);
+	i = -1;
+	while (++i < max_bits)
+	{
+		process_bit_pass(data, i, size);
+		while (data->b->size > 0)
+			pa(data);
 	}
 }

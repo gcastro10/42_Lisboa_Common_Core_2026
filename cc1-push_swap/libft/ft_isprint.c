@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 15:32:52 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 16:51:54 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/13 13:10:16 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/15 15:10:36 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 int	ft_isprint(int c)
 {
@@ -18,3 +20,10 @@ int	ft_isprint(int c)
 	}
 	return (0);
 }
+
+/*#include <stdio.h>
+int	main(void)
+{
+	printf("%i\n", ft_isprint('a'));
+	printf("%i\n", ft_isprint('\n'));
+}*/

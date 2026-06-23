@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 16:19:00 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:20:38 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/16 15:54:24 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/16 16:14:39 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	ft_putchar_fd(char c, int fd)
 {
-	if (fd < 0)
-	{
-		return ;
-	}
 	write(fd, &c, 1);
 }
+
+/*int	main(void)
+{
+	ft_putchar_fd('a', 1);
+	ft_putchar_fd('b', 2);
+}*/

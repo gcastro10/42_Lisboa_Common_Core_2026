@@ -1,5 +1,0 @@
-Hello World
-This is line two.
-
-Line four has a newline above it.
-Last line without newline (maybe)

@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/23 14:51:28 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/23 16:51:50 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/23 14:51:28 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/29 18:33:22 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 int	ft_isalpha(int c)
 {
@@ -18,3 +20,15 @@ int	ft_isalpha(int c)
 	}
 	return (0);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	printf("Testing 'A': %d (Expected: 1)\n", ft_isalpha('A'));
+	printf("Testing 'z': %d (Expected: 1)\n", ft_isalpha('z'));
+	printf("Testing '5': %d (Expected: 0)\n", ft_isalpha('5'));
+	printf("Testing '!': %d (Expected: 0)\n", ft_isalpha('!'));
+	return (0);
+}
+*/

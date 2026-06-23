@@ -3,35 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   ops_push.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: abrandao <abrandao@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/03 21:25:00 by gonca             #+#    #+#             */
-/*   Updated: 2026/06/05 14:40:03 by goperez-         ###   ########.fr       */
+/*   Created: 2026/06/09 20:53:02 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/15 17:42:14 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	pa(t_ctx *ctx)
+// Removes the top node from the source stack and adjusts the neighbors
+static t_node	*detach_top(t_stack *src)
 {
-	t_node	*n;
+	t_node	*node;
 
-	n = stack_pop(&ctx->b);
-	if (!n)
-		return ;
-	stack_push(&ctx->a, n);
-	ctx->counts[OP_PA]++;
-	put_str("pa\n", 1);
+	node = src->top;
+	if (src->size == 1)
+		src->top = NULL;
+	else
+	{
+		node->prev->next = node->next;
+		node->next->prev = node->prev;
+		src->top = node->next;
+	}
+	src->size--;
+	return (node);
 }
 
-void	pb(t_ctx *ctx)
+// Fits the node onto the top of the destination stack
+static void	attach_top(t_stack *dest, t_node *node)
 {
-	t_node	*n;
+	if (dest->size == 0)
+	{
+		node->next = node;
+		node->prev = node;
+	}
+	else
+	{
+		node->next = dest->top;
+		node->prev = dest->top->prev;
+		dest->top->prev->next = node;
+		dest->top->prev = node;
+	}
+	dest->top = node;
+	dest->size++;
+}
 
-	n = stack_pop(&ctx->a);
-	if (!n)
+void	pa(t_data *data)
+{
+	t_node	*node;
+
+	if (!data || !data->b || data->b->size == 0 || !data->b->top)
 		return ;
-	stack_push(&ctx->b, n);
-	ctx->counts[OP_PB]++;
-	put_str("pb\n", 1);
+	node = detach_top(data->b);
+	attach_top(data->a, node);
+	emit_op(data, "pa\n", 3, PA);
+}
+
+void	pb(t_data *data)
+{
+	t_node	*node;
+
+	if (!data || !data->a || data->a->size == 0 || !data->a->top)
+		return ;
+	node = detach_top(data->a);
+	attach_top(data->b, node);
+	emit_op(data, "pb\n", 3, PB);
 }

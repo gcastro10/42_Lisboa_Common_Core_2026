@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abrandao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 16:11:52 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/24 16:28:57 by gonca            ###   ########.fr       */
+/*   Created: 2026/04/15 16:28:46 by abrandao          #+#    #+#             */
+/*   Updated: 2026/04/30 13:18:38 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,23 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*res;
-	size_t	s1_len;
-	size_t	s2_len;
+	char	*result;
+	size_t	total_len;
 
 	if (!s1 || !s2)
-	{
 		return (NULL);
-	}
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	res = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
-	if (!res)
-	{
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	result = malloc(total_len + 1);
+	if (!result)
 		return (NULL);
-	}
-	ft_memcpy(res, s1, s1_len);
-	ft_memcpy(res + s1_len, s2, s2_len + 1);
-	return (res);
+	ft_strlcpy(result, s1, total_len + 1);
+	ft_strlcat(result, s2, total_len + 1);
+	return (result);
 }
+
+/* int	main(void)
+{
+	char *s1 = "Hello";
+	char *s2 = " World!";
+	printf("%s\n", ft_strjoin(s1, s2));
+} */

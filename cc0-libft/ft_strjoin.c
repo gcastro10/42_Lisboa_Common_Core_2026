@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 16:11:52 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/24 16:28:57 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/24 16:11:52 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 16:05:14 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(res + s1_len, s2, s2_len + 1);
 	return (res);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char *res;
+
+	res = ft_strjoin("Hello ", "42");
+	printf("%s\n", res);
+	free(res);
+	return (0);
+}
+*/
