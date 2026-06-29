@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 17:51:48 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 18:25:48 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/24 17:51:48 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/17 18:38:39 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 	*lst = new;
 }
 
-/* // --- Test Main ---
+/*
 #include <stdio.h>
 int	main(void)
 {

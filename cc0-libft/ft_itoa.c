@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/27 14:28:05 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/24 16:11:56 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/27 14:28:05 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 15:58:05 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,3 +58,25 @@ char	*ft_itoa(int n)
 	}
 	return (str);
 }
+
+/*
+#include <stdio.h>
+int main(void)
+{
+	char *res;
+
+	res = ft_itoa(-2147483648);
+	printf("Int min: %s\n", res);
+	free(res);
+
+	res = ft_itoa(0);
+	printf("Zero:    %s\n", res);
+	free(res);
+
+	res = ft_itoa(42);
+	printf("Normal:  %s\n", res);
+	free(res);
+
+	return (0);
+}
+*/

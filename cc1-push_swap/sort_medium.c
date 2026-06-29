@@ -1,73 +1,107 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   sort_medium.c                                         :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   chunk_sort.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:39:27 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/13 12:31:26 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-int	chunk_size(int size)
+static int	ft_sqrt(int num)
 {
-	if (size <= 50)
-		return (size / 5 + 1);
-	if (size <= 200)
-		return (size / 10 + 1);
-	return (size / 16 + 1);
+	int	i;
+
+	i = 1;
+	while (i * i < num)
+		i++;
+	return (i);
 }
 
-void	push_one(t_ctx *ctx, int *pushed)
+static void	push_to_b_sqrt(t_data *data, int chunk)
 {
-	pb(ctx);
-	(*pushed)++;
-	if (ctx->b.size > 1 && ctx->b.top->value < *pushed)
-		rb(ctx);
-}
+	int	i;
 
-void	push_chunks(t_ctx *ctx)
-{
-	int	chunk;
-	int	pushed;
-	int	limit;
-
-	chunk = chunk_size(ctx->a.size);
-	pushed = 0;
-	while (ctx->a.size > 0)
+	i = 0;
+	while (data->a->size > 0)
 	{
-		limit = pushed - (pushed % chunk) + chunk;
-		if (ctx->a.top->value < limit)
-			push_one(ctx, &pushed);
+		if (data->a->top->index <= i)
+		{
+			pb(data);
+			rb(data);
+			i++;
+		}
+		else if (data->a->top->index <= (i + chunk))
+		{
+			pb(data);
+			i++;
+		}
 		else
-			ra(ctx);
+			ra(data);
 	}
 }
 
-void	pull_back(t_ctx *ctx)
+static void	rotate_b_to_target(t_data *data, int target_index)
 {
 	int	pos;
 
-	while (ctx->b.size > 0)
+	pos = get_node_position(data->b, target_index);
+	if (pos <= data->b->size / 2)
 	{
-		pos = find_max_pos(&ctx->b);
-		rotate_to_top(ctx, pos, 0);
-		pa(ctx);
+		while (data->b->top->index != target_index)
+			rb(data);
+	}
+	else
+	{
+		while (data->b->top->index != target_index)
+			rrb(data);
 	}
 }
 
-void	sort_medium(t_ctx *ctx)
+static void	pull_to_a_ordered(t_data *data)
 {
-	if (ctx->a.size < 2 || is_sorted(&ctx->a))
-		return ;
-	if (ctx->a.size <= 3)
+	int		target_index;
+	int		pos;
+	t_node	*cur;
+
+	while (data->b->size > 0)
 	{
-		sort_simple(ctx);
+		cur = data->b->top;
+		target_index = cur->index;
+		pos = 0;
+		while (pos < data->b->size)
+		{
+			if (cur->index > target_index)
+				target_index = cur->index;
+			cur = cur->next;
+			pos++;
+		}
+		rotate_b_to_target(data, target_index);
+		pa(data);
+	}
+}
+
+void	run_chunk_sort(t_data *data)
+{
+	int	chunk;
+
+	if (!data || !data->a)
+		return ;
+	if (data->a->size <= 3)
+	{
+		sort_3(data);
 		return ;
 	}
-	rank_compress(&ctx->a);
-	push_chunks(ctx);
-	pull_back(ctx);
+	if (data->a->size == 5)
+	{
+		sort_5(data);
+		return ;
+	}
+	chunk = ft_sqrt(data->a->size);
+	push_to_b_sqrt(data, chunk);
+	pull_to_a_ordered(data);
 }

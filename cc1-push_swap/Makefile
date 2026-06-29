@@ -1,29 +1,53 @@
-NAME = push_swap
-
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+NAME = push_swap
 
-SRCS = main.c utils.c parse.c parse2.c stack.c \
-       ops_swap.c ops_push.c ops_rotate.c ops_rrotate.c ops_utils.c \
-       disorder.c sort_simple.c sort_medium.c sort_complex.c \
-       strategy.c strategy2.c
+LIBFT_DIR = ./libft
+LIBFT     = $(LIBFT_DIR)/libft.a
+CFLAGS   += -I$(LIBFT_DIR)
 
-OBJS = $(SRCS:.c=.o)
-HEADER = push_swap.h
+SOURCES = main.c \
+          parse.c \
+          choose_algorithm.c \
+          stack_utils.c \
+          rank_stack.c \
+          ops_swap.c \
+          ops_push.c \
+          ops_rotate.c \
+          ops_rrotate.c \
+          ops_output.c \
+          sort_simple.c \
+          sort_medium.c \
+          sort_complex.c \
+          sort_adaptive.c \
+          sort_small.c \
+          disorder.c \
+          show_benchmark.c
+
+OBJECTS = $(SOURCES:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+# This rule triggers the libft Makefile if libft.a is missing
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
 
-%.o: %.c $(HEADER)
+# Link push_swap with your object files AND the compiled libft.a
+$(NAME): $(OBJECTS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $(OBJECTS) -L$(LIBFT_DIR) -lft
+
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Clean push_swap objects, and call libft's clean rule
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJECTS)
+	@make -C $(LIBFT_DIR) clean
 
+# Full clean for push_swap, and call libft's fclean rule
 fclean: clean
 	rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

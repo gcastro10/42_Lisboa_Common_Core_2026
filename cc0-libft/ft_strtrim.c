@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 16:18:50 by gonca             #+#    #+#             */
-/*   Updated: 2026/02/27 13:50:25 by gonca            ###   ########.fr       */
+/*   Created: 2026/02/24 16:18:50 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/18 16:08:31 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
@@ -34,3 +33,17 @@ char	*ft_strtrim(char const *s1, char const *set)
 	}
 	return (ft_substr(s1, start, end - start));
 }
+
+/* 
+#include <stdio.h>
+int main(void)
+{
+	char *res;
+
+	res = ft_strtrim("...  hello world  ...", ". ");
+	printf("Trimmed: |%s|\n", res);
+	free(res);
+
+	return (0);
+}
+*/

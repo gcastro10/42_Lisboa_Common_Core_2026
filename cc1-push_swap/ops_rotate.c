@@ -1,49 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   ops_rotate.c                                          :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   ops_rotate.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abrandao <abrandao@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:52:59 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/15 17:42:16 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-void	do_rotate(t_stack *s)
+static void	rotate_top(t_stack *stack)
 {
-	t_node	*n;
-
-	if (!s->top || !s->top->next)
+	if (!stack || stack->size < 2 || !stack->top)
 		return ;
-	n = s->top;
-	s->top = n->next;
-	s->top->prev = NULL;
-	n->next = NULL;
-	n->prev = s->bottom;
-	s->bottom->next = n;
-	s->bottom = n;
+	stack->top = stack->top->next;
 }
 
-void	ra(t_ctx *ctx)
+void	ra(t_data *data)
 {
-	do_rotate(&ctx->a);
-	ctx->counts[OP_RA]++;
-	put_str("ra\n", 1);
+	if (!data || !data->a || data->a->size < 2)
+		return ;
+	rotate_top(data->a);
+	emit_op(data, "ra\n", 3, RA);
 }
 
-void	rb(t_ctx *ctx)
+void	rb(t_data *data)
 {
-	do_rotate(&ctx->b);
-	ctx->counts[OP_RB]++;
-	put_str("rb\n", 1);
+	if (!data || !data->b || data->b->size < 2)
+		return ;
+	rotate_top(data->b);
+	emit_op(data, "rb\n", 3, RB);
 }
 
-void	rr(t_ctx *ctx)
+void	rr(t_data *data)
 {
-	do_rotate(&ctx->a);
-	do_rotate(&ctx->b);
-	ctx->counts[OP_RR]++;
-	put_str("rr\n", 1);
+	int	rotated;
+
+	if (!data)
+		return ;
+	rotated = 0;
+	if (data->a && data->a->size >= 2)
+	{
+		rotate_top(data->a);
+		rotated = 1;
+	}
+	if (data->b && data->b->size >= 2)
+	{
+		rotate_top(data->b);
+		rotated = 1;
+	}
+	if (rotated)
+	{
+		emit_op(data, "rr\n", 3, RR);
+	}
 }

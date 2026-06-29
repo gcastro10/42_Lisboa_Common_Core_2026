@@ -3,100 +3,115 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 17:28:23 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/27 13:19:56 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/25 17:28:23 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/01 17:06:26 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*read_from_file(int fd, char *storage)
-{
-	char	*buffer;
-	int		bytes_read;
-
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-	{
-		return (NULL);
-	}
-	bytes_read = 1;
-	while (!ft_strchr(storage, '\n') && bytes_read != 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			free(storage);
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		storage = ft_strjoin(storage, buffer);
-	}
-	free(buffer);
-	return (storage);
-}
-
-static char	*extract_line(char *storage)
-{
-	int		i;
-	char	*line;
-
-	i = 0;
-	if (!storage || !storage[i])
-	{
-		return (NULL);
-	}
-	while (storage[i] && storage[i] != '\n')
-	{
-		i++;
-	}
-	line = ft_substr(storage, 0, i + 1);
-	return (line);
-}
-
-static char	*clean_storage(char *storage)
-{
-	int		i;
-	char	*new_storage;
-
-	i = 0;
-	while (storage[i] && storage[i] != '\n')
-	{
-		i++;
-	}
-	if (!storage[i])
-	{
-		free(storage);
-		return (NULL);
-	}
-	new_storage = ft_substr(storage, i + 1, ft_strlen(storage) - i);
-	free(storage);
-	return (new_storage);
-}
-
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	buffer[BUFFER_SIZE + 1];
 	char		*line;
+	char		*temp;
+	int			i;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-	{
 		return (NULL);
-	}
-	storage = read_from_file(fd, storage);
-	if (!storage)
+	line = ft_strdup(buffer);
+	line = read_and_store(fd, line, buffer);
+	if (!line || *line == '\0')
 	{
-		return (NULL);
+		buffer[0] = '\0';
+		return (free(line), NULL);
 	}
-	line = extract_line(storage);
-	storage = clean_storage(storage);
-	if (line && *line == '\0')
-	{
-		free(line);
-		return (NULL);
-	}
-	return (line);
+	i = 0;
+	while (line[i] && line[i] != '\n')
+		i++;
+	temp = ft_substr(line, 0, i + (line[i] == '\n'));
+	update_buffer(buffer, line, i + (line[i] == '\n'));
+	free(line);
+	return (temp);
 }
+
+
+#include <fcntl.h>
+#include <stdio.h>
+#include "get_next_line.h"
+
+int main(void)
+{
+    int     fd;
+    char    *line;
+    int     count; 
+
+    //Test 1: Reading from a file
+    fd = open("test.txt", O_RDONLY);
+    if (fd == -1)
+    {
+        perror("Error opening file");
+        return (1);
+    }
+    
+    count = 1;
+    printf("--- Reading from test.txt ---\n");
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("Line %d: %s", count++, line);
+        free(line);
+    } 
+    close(fd); 
+    return (0);
+} 
+
+
+/* 
+#include <fcntl.h>
+#include <stdio.h>
+#include "get_next_line.h"
+
+int main(void)
+{
+    int     fd;
+    char    *line;
+    int     count; 
+
+    //Test 1: Reading from a file
+    fd = open("test.txt", O_RDONLY);
+    if (fd == -1)
+    {
+        perror("Error opening file");
+        return (1);
+    }
+
+    printf("Line: %s", line);
+    free(line); 
+    close(fd); 
+
+    return (0);
+} 
+
+*/
+
+/* 
+#include <fcntl.h>
+#include <stdio.h>
+#include "get_next_line.h"
+
+int main(void)
+{
+    char    *line;
+  
+    // Test 2: Reading from Standard Input (Keyboard)
+    printf("\n--- Reading from Stdin (Type something then Ctrl+D) ---\n");
+    while ((line = get_next_line(0)) != NULL)
+    {
+        printf("You typed: %s", line);
+        free(line);
+    } 
+
+    return (0);
+}  */

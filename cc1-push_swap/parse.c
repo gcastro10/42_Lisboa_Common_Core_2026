@@ -1,94 +1,107 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   parse.c                                               :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:17:45 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/16 14:48:31 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-int	ft_strcmp(const char *a, const char *b)
+int	validate_flags(t_data *data)
+{
+	int	algorithm_strategies;
+
+	if (!data)
+		return (0);
+	algorithm_strategies = data->flags.simple
+		+ data->flags.medium
+		+ data->flags.complex
+		+ data->flags.adaptive;
+	if (algorithm_strategies > 1)
+	{
+		write(2, "Error\n", 6);
+		return (0);
+	}
+	if (algorithm_strategies == 0)
+		data->flags.adaptive = 1;
+	return (1);
+}
+
+void	free_matrix(char **matrix)
 {
 	int	i;
 
+	if (!matrix)
+		return ;
 	i = 0;
-	while (a[i] && a[i] == b[i])
+	while (matrix[i])
+	{
+		free(matrix[i]);
 		i++;
-	return ((unsigned char)a[i] - (unsigned char)b[i]);
+	}
+	free(matrix);
 }
 
-int	parse_int(const char *s, int *out)
+static int	parse_flag(t_data *data, char *arg)
 {
-	long	n;
+	if (ft_strncmp(arg, "--bench", 8) == 0)
+		return (data->flags.bench = 1);
+	else if (ft_strncmp(arg, "--adaptive", 11) == 0)
+		return (data->flags.adaptive = 1);
+	else if (ft_strncmp(arg, "--simple", 9) == 0)
+		return (data->flags.simple = 1);
+	else if (ft_strncmp(arg, "--medium", 9) == 0)
+		return (data->flags.medium = 1);
+	else if (ft_strncmp(arg, "--complex", 10) == 0)
+		return (data->flags.complex = 1);
+	else if (ft_strncmp(arg, "--count-only", 12) == 0)
+		return (data->flags.count_total = 1);
+	return (0);
+}
+
+static int	handle_arguments(t_data *data, char *arg)
+{
+	int	value;
+
+	if (parse_flag(data, arg))
+		return (1);
+	if (!ft_atoi(arg, &value))
+		return (write(2, "Error\n", 6), 0);
+	if (has_duplicate(data->a, value))
+		return (write(2, "Error\n", 6), 0);
+	if (!add_back_circular(data->a, value))
+		return (0);
+	return (1);
+}
+
+int	process_input(t_data *data, int argc, char **argv)
+{
 	int		i;
-	int		sign;
+	int		j;
+	char	**split_args;
 
-	n = 0;
-	i = 0;
-	sign = 1;
-	if (s[i] == '-' || s[i] == '+')
-		if (s[i++] == '-')
-			sign = -1;
-	if (!s[i])
-		return (-1);
-	while (s[i] >= '0' && s[i] <= '9')
+	i = 1;
+	while (i < argc)
 	{
-		n = n * 10 + (s[i++] - '0');
-		if (n * sign > 2147483647 || n * sign < -2147483648)
-			return (-1);
+		if (!argv[i] || argv[i][0] == '\0')
+			return (0);
+		split_args = ft_split(argv[i], ' ');
+		if (!split_args)
+			return (0);
+		j = 0;
+		while (split_args[j])
+		{
+			if (!handle_arguments(data, split_args[j]))
+				return (free_matrix(split_args), 0);
+			j++;
+		}
+		free_matrix(split_args);
+		i++;
 	}
-	if (s[i])
-		return (-1);
-	*out = (int)(n * sign);
-	return (0);
-}
-
-int	is_duplicate(int val, t_stack *a)
-{
-	t_node	*n;
-
-	n = a->top;
-	while (n)
-	{
-		if (n->value == val)
-			return (1);
-		n = n->next;
-	}
-	return (0);
-}
-
-int	parse_one(char *arg, t_ctx *ctx)
-{
-	int		v;
-	t_node	*n;
-
-	if (arg[0] == '-' && arg[1] == '-')
-		return (set_flag(arg, ctx));
-	if (parse_int(arg, &v))
-		return (-1);
-	if (is_duplicate(v, &ctx->a))
-		return (-1);
-	n = node_new(v);
-	if (!n)
-		return (-1);
-	stack_push(&ctx->a, n);
-	return (0);
-}
-
-int	parse_args(int argc, char **argv, t_ctx *ctx)
-{
-	int	i;
-
-	i = argc - 1;
-	while (i >= 1)
-	{
-		if (parse_one(argv[i], ctx))
-			return (-1);
-		i--;
-	}
-	return (0);
+	return (1);
 }

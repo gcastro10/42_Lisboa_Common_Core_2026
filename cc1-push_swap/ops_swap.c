@@ -1,54 +1,61 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   ops_swap.c                                            :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   ops_swap.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abrandao <abrandao@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:52:54 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/15 17:42:19 by abrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-void	do_swap(t_stack *s)
+static void	swap_top(t_stack *stack)
 {
-	t_node	*a;
-	t_node	*b;
+	t_node	*first;
+	t_node	*second;
+	t_node	*last;
 
-	if (!s->top || !s->top->next)
+	if (!stack || stack->size < 2)
 		return ;
-	a = s->top;
-	b = a->next;
-	a->next = b->next;
-	if (b->next)
-		b->next->prev = a;
-	else
-		s->bottom = a;
-	b->prev = NULL;
-	b->next = a;
-	a->prev = b;
-	s->top = b;
+	first = stack->top;
+	second = first->next;
+	if (stack->size == 2)
+	{
+		stack->top = second;
+		return ;
+	}
+	last = first->prev;
+	first->next = second->next;
+	second->next->prev = first;
+	second->next = first;
+	first->prev = second;
+	second->prev = last;
+	last->next = second;
+	stack->top = second;
 }
 
-void	sa(t_ctx *ctx)
+void	sa(t_data *data)
 {
-	do_swap(&ctx->a);
-	ctx->counts[OP_SA]++;
-	put_str("sa\n", 1);
+	if (!data || !data->a || data->a->size < 2)
+		return ;
+	swap_top(data->a);
+	emit_op(data, "sa\n", 3, SA);
 }
 
-void	sb(t_ctx *ctx)
+void	sb(t_data *data)
 {
-	do_swap(&ctx->b);
-	ctx->counts[OP_SB]++;
-	put_str("sb\n", 1);
+	if (!data || !data->b || data->b->size < 2)
+		return ;
+	swap_top(data->b);
+	emit_op(data, "sb\n", 3, SB);
 }
 
-void	ss(t_ctx *ctx)
+void	ss(t_data *data)
 {
-	do_swap(&ctx->a);
-	do_swap(&ctx->b);
-	ctx->counts[OP_SS]++;
-	put_str("ss\n", 1);
+	swap_top(data->a);
+	swap_top(data->b);
+	emit_op(data, "ss\n", 3, SS);
 }

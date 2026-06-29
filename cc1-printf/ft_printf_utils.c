@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 17:41:20 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/29 18:27:28 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/29 17:41:20 by goperez-          #+#    #+#             */
+/*   Updated: 2026/05/14 15:16:24 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,19 @@ int	ft_print_str(char *str)
 	}
 	return (i);
 }
-int	ft_print_digit(long n, int base, int uppercase)
+
+int	ft_print_digit(int n, int base, int uppercase)
 {
 	int		count;
 	char	*symbols;
 
 	count = 0;
 	if (uppercase)
-	{
 		symbols = "0123456789ABCDEF";
-	}
 	else
-	{
 		symbols = "0123456789abcdef";
-	}
+	if (n == -2147483648)
+		return (ft_print_str("-2147483648"));
 	if (n < 0)
 	{
 		count += ft_print_char('-');
@@ -82,7 +81,7 @@ int	ft_print_ptr(unsigned long long ptr)
 	int	count;
 
 	if (!ptr)
-		return (ft_print_str("(nil)")); // Note: usually (nil) on Linux, 0x0 on Mac
+		return (ft_print_str("(nil)"));
 	count = ft_print_str("0x");
 	count += ft_print_unsigned(ptr, 16, 0);
 	return (count);

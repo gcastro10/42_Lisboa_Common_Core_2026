@@ -1,80 +1,98 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   main.c                                                :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/08 16:33:28 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/16 14:50:17 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-void	init_ctx(t_ctx *ctx)
+static void	free_stack(t_stack *stack)
 {
-	int	i;
+	t_node	*current;
+	t_node	*tmp;
+	t_node	*start;
 
-	ctx->a.top = NULL;
-	ctx->a.bottom = NULL;
-	ctx->a.size = 0;
-	ctx->b.top = NULL;
-	ctx->b.bottom = NULL;
-	ctx->b.size = 0;
-	ctx->bench_on = 0;
-	ctx->strategy = ADAPTIVE;
-	ctx->disorder = 0;
-	i = 0;
-	while (i < 11)
-		ctx->counts[i++] = 0;
-}
-
-int	is_sorted(t_stack *a)
-{
-	t_node	*n;
-
-	n = a->top;
-	while (n && n->next)
-	{
-		if (n->value > n->next->value)
-			return (0);
-		n = n->next;
-	}
-	return (1);
-}
-
-void	run_sort(t_ctx *ctx)
-{
-	if (ctx->a.size < 2)
-	{
-		if (ctx->bench_on)
-			print_bench(ctx);
+	if (!stack)
 		return ;
+	current = stack->top;
+	if (current)
+	{
+		start = current;
+		while (current)
+		{
+			tmp = current->next;
+			free(current);
+			current = tmp;
+			if (current == start)
+				break ;
+		}
 	}
-	ctx->disorder = compute_disorder(&ctx->a);
-	dispatch_sort(ctx);
-	if (ctx->bench_on)
-		print_bench(ctx);
+	free(stack);
 }
 
-void	free_ctx(t_ctx *ctx)
+static void	cleanup_and_exit(t_data *data, int exit_code)
 {
-	stack_clear(&ctx->a);
-	stack_clear(&ctx->b);
+	if (!data)
+		return ;
+	if (data->flags.bench && exit_code == 0)
+		print_bench_report(&data->bench);
+	if (data->a)
+		free_stack(data->a);
+	if (data->b)
+		free_stack(data->b);
+	free(data);
+	exit(exit_code);
+}
+
+static t_data	*init_data(void)
+{
+	t_data	*data;
+
+	data = ft_calloc(1, sizeof(t_data));
+	if (!data)
+		return (NULL);
+	data->a = ft_calloc(1, sizeof(t_stack));
+	if (!data->a)
+		return (NULL);
+	data->b = ft_calloc(1, sizeof(t_stack));
+	if (!data->b)
+	{
+		free(data->a);
+		free(data);
+		return (NULL);
+	}
+	data->bench.strategy = "";
+	data->bench.complexity = "";
+	return (data);
 }
 
 int	main(int argc, char **argv)
 {
-	t_ctx	ctx;
+	t_data	*data;
 
-	init_ctx(&ctx);
-	if (parse_args(argc, argv, &ctx))
-	{
-		free_ctx(&ctx);
-		put_error();
+	if (argc < 2)
 		return (1);
+	data = init_data();
+	if (!data)
+		return (1);
+	if (!process_input(data, argc, argv))
+		cleanup_and_exit(data, 1);
+	rank_stack(data->a);
+	if (!validate_flags(data))
+		cleanup_and_exit(data, 1);
+	data->bench.disorder = compute_disorder(data->a) * 100.0;
+	algorithm_hub(data);
+	if (data->flags.count_total)
+	{
+		ft_putnbr_fd(data->bench.total_ops, 2);
+		ft_putstr_fd("\n", 2);
 	}
-	run_sort(&ctx);
-	free_ctx(&ctx);
+	cleanup_and_exit(data, 0);
 	return (0);
 }

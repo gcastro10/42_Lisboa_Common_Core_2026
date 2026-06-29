@@ -1,75 +1,77 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   sort_simple.c                                         :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   sort_simple.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:53:20 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/15 16:53:16 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-void	sort_2(t_ctx *ctx)
-{
-	if (ctx->a.top->value > ctx->a.top->next->value)
-		sa(ctx);
-}
-
-void	sort_3(t_ctx *ctx)
-{
-	int	a;
-	int	b;
-	int	c;
-
-	a = ctx->a.top->value;
-	b = ctx->a.top->next->value;
-	c = ctx->a.bottom->value;
-	if (a > b && b < c && a < c)
-		sa(ctx);
-	else if (a > b && b > c)
-	{
-		sa(ctx);
-		rra(ctx);
-	}
-	else if (a > b && a > c)
-		ra(ctx);
-	else if (a < b && b > c && a < c)
-	{
-		sa(ctx);
-		ra(ctx);
-	}
-	else if (a < b && b > c && a > c)
-		rra(ctx);
-}
-
-void	push_min_to_b(t_ctx *ctx)
+static void	align_stack_a(t_data *data)
 {
 	int	pos;
 
-	pos = find_min_pos(&ctx->a);
-	rotate_to_top(ctx, pos, 1);
-	pb(ctx);
-}
-
-void	pa_all(t_ctx *ctx)
-{
-	while (ctx->b.size > 0)
-		pa(ctx);
-}
-
-void	sort_simple(t_ctx *ctx)
-{
-	if (ctx->a.size < 2 || is_sorted(&ctx->a))
+	if (!data->a || data->a->size <= 0)
 		return ;
-	if (ctx->a.size == 2)
+	pos = get_node_position(data->a, 0);
+	if (pos < 0)
+		return ;
+	if (pos <= data->a->size / 2)
 	{
-		sort_2(ctx);
+		while (pos-- > 0)
+			ra(data);
+	}
+	else
+	{
+		while (pos++ < data->a->size)
+			rra(data);
+	}
+}
+
+static void	execute_bubble_loop(t_data *data, int size)
+{
+	int	i;
+	int	j;
+	int	sorted;
+
+	i = -1;
+	while (++i < size)
+	{
+		sorted = 1;
+		j = -1;
+		while (++j < size - 1)
+		{
+			if (data->a->top->index > data->a->top->next->index)
+			{
+				sa(data);
+				sorted = 0;
+			}
+			ra(data);
+		}
+		if (sorted)
+			break ;
+	}
+}
+
+void	run_bubble_sort(t_data *data)
+{
+	if (!data || !data->a || data->a->size < 2)
+		return ;
+	if (data->a->size <= 3)
+	{
+		sort_3(data);
 		return ;
 	}
-	while (ctx->a.size > 3)
-		push_min_to_b(ctx);
-	sort_3(ctx);
-	pa_all(ctx);
+	else if (data->a->size <= 5)
+	{
+		sort_5(data);
+		return ;
+	}
+	execute_bubble_loop(data, data->a->size);
+	align_stack_a(data);
 }

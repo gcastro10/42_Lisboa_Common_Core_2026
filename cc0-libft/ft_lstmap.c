@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gonca <gonca@student.42.fr>                +#+  +:+       +#+        */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 17:01:30 by gonca             #+#    #+#             */
-/*   Updated: 2026/03/25 17:05:16 by gonca            ###   ########.fr       */
+/*   Created: 2026/03/25 17:01:30 by goperez-          #+#    #+#             */
+/*   Updated: 2026/04/17 18:43:12 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,31 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	}
 	return (new_list);
 }
+
+/*
+#include <stdio.h>
+void	*duplicate(void *content)
+{
+	return (ft_strdup((char *)content));
+}
+
+void	del(void *content)
+{
+	free(content);
+}
+
+int main(void)
+{
+	t_list *list = ft_lstnew(ft_strdup("hello"));
+	t_list *new_list;
+
+	new_list = ft_lstmap(list, duplicate, del);
+	
+	printf("Original: %s\n", (char *)list->content);
+	printf("New List: %s\n", (char *)new_list->content);
+
+	ft_lstclear(&list, del);
+	ft_lstclear(&new_list, del);
+	return (0);
+}
+*/

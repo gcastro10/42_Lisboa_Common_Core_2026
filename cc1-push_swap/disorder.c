@@ -1,62 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                           :::      ::::::::*/
-/*   disorder.c                                            :+:      :+:    :+:*/
-/*                                                       +:+ +:+         +:+  */
-/*   By: gonca <gonca@student.42.fr>                   +#+  +:+       +#+     */
-/*                                                   +#+#+#+#+#+   +#+        */
-/*   Created: 2026/06/03 21:25:00 by gonca                #+#    #+#          */
-/*   Updated: 2026/06/03 21:25:00 by gonca               ###   ########.fr    */
+/*                                                        :::      ::::::::   */
+/*   disorder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: goperez- <goperez-@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 20:53:08 by goperez-          #+#    #+#             */
+/*   Updated: 2026/06/15 16:36:22 by goperez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "push_swap.h"
 
-long	count_from(int *arr, int n, int i)
+static void	count_pairs_and_mistakes(t_stack *a, t_node *curr_i,
+				long *total_pairs, long *mistakes)
 {
-	long	c;
-	int		j;
+	t_node	*curr_j;
 
-	c = 0;
-	j = i + 1;
-	while (j < n)
+	curr_j = curr_i->next;
+	while (curr_j != a->top)
 	{
-		if (arr[i] > arr[j])
-			c++;
-		j++;
+		(*total_pairs)++;
+		if (curr_i->index > curr_j->index)
+			(*mistakes)++;
+		curr_j = curr_j->next;
 	}
-	return (c);
 }
 
-long	count_inversions(int *arr, int n)
+double	compute_disorder(t_stack *a)
 {
-	long	total;
-	int		i;
-
-	total = 0;
-	i = 0;
-	while (i < n)
-	{
-		total += count_from(arr, n, i);
-		i++;
-	}
-	return (total);
-}
-
-int	compute_disorder(t_stack *a)
-{
-	int		*arr;
+	t_node	*curr_i;
 	long	mistakes;
-	long	total;
-	int		res;
+	long	total_pairs;
 
-	if (a->size <= 1)
-		return (0);
-	arr = stack_to_array(a);
-	if (!arr)
-		return (0);
-	mistakes = count_inversions(arr, a->size);
-	total = (long)a->size * (a->size - 1) / 2;
-	res = (int)(mistakes * 1000 / total);
-	free(arr);
-	return (res);
+	if (!a || a->size <= 1 || !a->top)
+		return (0.0);
+	mistakes = 0;
+	total_pairs = 0;
+	curr_i = a->top;
+	while (1)
+	{
+		count_pairs_and_mistakes(a, curr_i, &total_pairs, &mistakes);
+		curr_i = curr_i->next;
+		if (curr_i == a->top)
+			break ;
+	}
+	if (total_pairs == 0)
+		return (0.0);
+	return ((double)mistakes / total_pairs);
 }
