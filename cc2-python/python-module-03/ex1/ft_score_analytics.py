@@ -2,21 +2,22 @@ import sys
 
 
 def main() -> None:
-    """Analyze and display statistics for player scores from command-line arguments."""
+    """Analyze and display command-line player score statistics."""
     print("=== Player Score Analytics ===")
 
-    # Grab arguments excluding the script name
-    raw_args: list[str] = sys.argv[1:]
     scores: list[int] = []
 
     # Process input parameters using EAFP style error handling
-    for arg in raw_args:
+    index: int = 1
+    while index < len(sys.argv):
+        arg: str = sys.argv[index]
         try:
             # Attempt to convert to int. Throws ValueError if it fails.
             score: int = int(arg)
-            scores.append(score)
+            scores = scores + [score]
         except ValueError:
             print(f"Invalid parameter: '{arg}'")
+        index += 1
 
     # If no valid scores were extracted (either empty input or all invalid)
     if not scores:

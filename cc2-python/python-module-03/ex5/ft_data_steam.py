@@ -55,11 +55,7 @@ def main() -> None:
     for i in range(1000):
         # next() asks the generator state to run until its next yield statement
         player, action = next(stream)
-        # Using conditional trick to mimic the truncated output pattern nicely
-        if i < 15 or i >= 992:
-            print(f"Event {i}: Player {player} did action {action}")
-        elif i == 15:
-            print("[...]")
+        print(f"Event {i}: Player {player} did action {action}")
 
     # 2. Build a fresh list of exactly 10 tuples from the stream
     events_buffer: list[tuple[str, str]] = [next(stream) for _ in range(10)]

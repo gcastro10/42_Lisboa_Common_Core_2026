@@ -20,7 +20,9 @@ def main() -> None:
 
     # 1. List comprehension: Capitalize all names (.map equivalency)
     # .capitalize() forces the first letter uppercase and the rest lowercase
-    all_capitalized: list[str] = [name.capitalize() for name in initial_players]
+    all_capitalized: list[str] = [
+        name.capitalize() for name in initial_players
+    ]
     print(f"New list with all names capitalized: {all_capitalized}")
 
     # 2. List comprehension: Filter out only initially capitalized names
@@ -37,13 +39,15 @@ def main() -> None:
     print(f"Score dict: {score_dict}")
 
     # Calculate average score using the authorized sum() and len() built-ins
-    total_score: int = sum(score_dict.values())
+    total_score: int = sum(score_dict[name] for name in all_capitalized)
     avg_score: float = total_score / len(score_dict) if score_dict else 0.0
     print(f"Score average is {round(avg_score, 2)}")
 
     # 4. Dict comprehension: Filter items higher than the average score
     high_scores: dict[str, int] = {
-        name: score for name, score in score_dict.items() if score > avg_score
+        name: score_dict[name]
+        for name in all_capitalized
+        if score_dict[name] > avg_score
     }
     print(f"High scores: {high_scores}")
 

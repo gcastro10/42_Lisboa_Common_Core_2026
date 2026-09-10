@@ -2,16 +2,18 @@ import sys
 
 
 def main() -> None:
-    """Parse command-line parameters to build, analyze, and update an RPG inventory."""
+    """Build, analyze, and update an RPG inventory from command-line data."""
     print("=== Inventory System Analysis ===")
 
-    raw_args: list[str] = sys.argv[1:]
     inventory: dict[str, int] = {}
 
     # 1. Parse and validate arguments
-    for arg in raw_args:
+    index: int = 1
+    while index < len(sys.argv):
+        arg: str = sys.argv[index]
         if ":" not in arg:
             print(f"Error - invalid parameter '{arg}'")
+            index += 1
             continue
 
         # Split at the first colon only (standard defensive practice)
@@ -28,13 +30,10 @@ def main() -> None:
             inventory[item] = quantity
         except ValueError as val_err:
             print(f"Quantity error for '{item}': {val_err}")
+        index += 1
 
     # Display initial parsed state
     print(f"Got inventory: {inventory}")
-
-    # Quick exit guard if no items were valid
-    if not inventory:
-        return
 
     # 2. Extract item list using the authorized list() constructor
     # dict.keys() returns a view object, list() turns it into a standard list
@@ -45,31 +44,32 @@ def main() -> None:
     total_qty: int = sum(inventory.values())
     print(f"Total quantity of the {len(inventory)} items: {total_qty}")
 
-    # 4. Display percentage breakdown per item
-    for item, qty in inventory.items():
-        # Avoid division by zero safely if total_qty happens to be 0
-        pct: float = (qty / total_qty) * 100 if total_qty > 0 else 0.0
-        print(f"Item {item} represents {round(pct, 1)}%")
+    if inventory:
+        # 4. Display percentage breakdown per item
+        for item in item_list:
+            qty: int = inventory[item]
+            pct: float = (qty / total_qty) * 100 if total_qty > 0 else 0.0
+            print(f"Item {item} represents {round(pct, 1)}%")
 
-    # 5. Determine most and least abundant items
-    # Because insertion order is guaranteed, we grab the first item as the initial benchmark
-    most_abundant_item: str = item_list[0]
-    least_abundant_item: str = item_list[0]
+        # 5. Determine most and least abundant items
+        most_abundant_item: str = item_list[0]
+        least_abundant_item: str = item_list[0]
 
-    for item, qty in inventory.items():
-        if qty > inventory[most_abundant_item]:
-            most_abundant_item = item
-        if qty < inventory[least_abundant_item]:
-            least_abundant_item = item
+        for item in item_list:
+            qty = inventory[item]
+            if qty > inventory[most_abundant_item]:
+                most_abundant_item = item
+            if qty < inventory[least_abundant_item]:
+                least_abundant_item = item
 
-    print(
-        f"Item most abundant: {most_abundant_item} "
-        f"with quantity {inventory[most_abundant_item]}"
-    )
-    print(
-        f"Item least abundant: {least_abundant_item} "
-        f"with quantity {inventory[least_abundant_item]}"
-    )
+        print(
+            f"Item most abundant: {most_abundant_item} "
+            f"with quantity {inventory[most_abundant_item]}"
+        )
+        print(
+            f"Item least abundant: {least_abundant_item} "
+            f"with quantity {inventory[least_abundant_item]}"
+        )
 
     # 6. Update inventory using the authorized dict.update()
     inventory.update({"magic_item": 1})

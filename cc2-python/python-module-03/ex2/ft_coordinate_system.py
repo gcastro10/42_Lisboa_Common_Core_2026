@@ -37,9 +37,8 @@ def get_player_pos() -> tuple[float, float, float]:
             return (x, y, z)
 
         except (KeyboardInterrupt, EOFError):
-            # Gracefully exit if user hits Ctrl+C or Ctrl+D
             print("\nExiting...")
-            sys.exit(0)
+            return (0.0, 0.0, 0.0)
 
 
 def main() -> None:
@@ -67,10 +66,11 @@ def main() -> None:
     dist_between: float = math.sqrt(
         (x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2
     )
-    print(f"Distance between the 2 sets of coordinates: {round(dist_between, 4)}")
+    print(
+        "Distance between the 2 sets of coordinates: "
+        f"{round(dist_between, 4)}"
+    )
 
 
 if __name__ == "__main__":
-    import sys  # Imported here to safely use sys.exit on interruption
-
     main()

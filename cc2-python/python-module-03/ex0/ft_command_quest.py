@@ -11,17 +11,16 @@ def main() -> None:
 
     print(f"Program name: {program_name}")
 
-    # Slice the list to separate the script name from actual arguments
-    # sys.argv[1:] is equivalent to TS: sys.argv.slice(1)
-    arguments: list[str] = sys.argv[1:]
+    argument_count: int = total_args - 1
 
-    if not arguments:
+    if argument_count == 0:
         print("No arguments provided!")
     else:
-        print(f"Arguments received: {len(arguments)}")
-        # enumerate(..., 1) gives us both the index (starting at 1) and the item
-        for index, arg in enumerate(arguments, 1):
-            print(f"Argument {index}: {arg}")
+        print(f"Arguments received: {argument_count}")
+        index: int = 1
+        while index < total_args:
+            print(f"Argument {index}: {sys.argv[index]}")
+            index += 1
 
     print(f"Total arguments: {total_args}")
 
